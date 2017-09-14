@@ -62,7 +62,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  */
 fun digitNumber(n: Int): Int{
     var count = 0
-    var num = n
+    var num = Math.abs(n)
     if(num == 0) return 1
     while(num>0){
         count++
