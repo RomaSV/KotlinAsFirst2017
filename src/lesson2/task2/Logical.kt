@@ -77,7 +77,7 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean = when{
     (a<=r && b<=s) || (a<=s && b<=r) -> true
     (b<=r && c<=s) || (b<=s && c<=r) -> true
-    (c<=r && a<=s) || (c<=s || a<=r) -> true
-    else                             ->  false
+    (c<=r && a<=s) || (c<=s && a<=r) -> true
+    else                             -> false
     }
 
