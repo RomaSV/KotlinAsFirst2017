@@ -51,7 +51,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
         when {
             n == m -> 1
             n < 10 -> 0
-            else -> digitCountInNumber(n / 10, m) + digitCountInNumber(n % 10, m)
+            else   -> digitCountInNumber(n / 10, m) + digitCountInNumber(n % 10, m)
         }
 
 /**
@@ -64,7 +64,7 @@ fun digitNumber(n: Int): Int{
     var count = 0
     var num = Math.abs(n)
     if(num == 0) return 1
-    while(num>0){
+    while(num > 0){
         count++
         num /= 10
     }
@@ -77,7 +77,7 @@ fun digitNumber(n: Int): Int{
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = if(n>2) fib(n-2) + fib(n-1) else 1
+fun fib(n: Int): Int = if(n > 2) fib(n - 2) + fib(n - 1) else 1
 
 /**
  * Простая
@@ -85,15 +85,23 @@ fun fib(n: Int): Int = if(n>2) fib(n-2) + fib(n-1) else 1
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int{
+
+fun nod(m: Int, n: Int): Int{
     var a = m
     var b = n
-    while(a!=b){
-        if(a>b) a -= b else b-=a
+    var tmp: Int
+
+    while(b > 0){
+        a %= b
+        tmp = a
+        a = b
+        b = tmp
     }
-    val nod = a
-    return m*n/nod
+    return a
 }
+
+fun lcm(m: Int, n: Int): Int = m * n / nod(m, n)
+
 
 /**
  * Простая

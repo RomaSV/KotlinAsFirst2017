@@ -35,10 +35,10 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
 fun ageDescription(age: Int): String = when{
-    age%100 in 10..14 -> "$age лет"
-    age%10 == 1       -> "$age год"
-    age%10 in 2..4       -> "$age года"
-    else              -> "$age лет"
+    age % 100 in 10..14 -> "$age лет"
+    age % 10  == 1      -> "$age год"
+    age % 10  in 2..4   -> "$age года"
+    else                -> "$age лет"
 }
 
 
@@ -52,14 +52,14 @@ fun ageDescription(age: Int): String = when{
 fun timeForHalfWay(t1: Double, v1: Double,
                    t2: Double, v2: Double,
                    t3: Double, v3: Double): Double{
-    val s1: Double = t1*v1
-    val s2: Double = t2*v2
-    val s3: Double = t3*v3
-    val halfWay: Double = (s1+s2+s3)/2.0
+    val s1 = t1 * v1
+    val s2 = t2 * v2
+    val s3 = t3 * v3
+    val halfWay = (s1 + s2 + s3) / 2.0
     return when{
-        halfWay <= s1        -> halfWay/v1
-        halfWay in s1..s1+s2 -> t1 + (halfWay-s1)/v2
-        else                 -> t1 + t2 + (halfWay-s1-s2)/v3
+        halfWay <= s1        -> halfWay / v1
+        halfWay in s1..s1+s2 -> t1 + (halfWay - s1) / v2
+        else                 -> t1 + t2 + (halfWay - s1 - s2) / v3
     }
 }
 
@@ -74,10 +74,15 @@ fun timeForHalfWay(t1: Double, v1: Double,
  */
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
-                       rookX2: Int, rookY2: Int): Int = when{
-    kingX == rookX1 || kingY == rookY1 -> if(kingX == rookX2 || kingY == rookY2) 3 else 1
-    kingX == rookX2 || kingY == rookY2 -> 2
-    else                               -> 0
+                       rookX2: Int, rookY2: Int): Int{
+    val rook1 = kingX == rookX1 || kingY == rookY1
+    val rook2 = kingX == rookX2 || kingY == rookY2
+    return when{
+        rook1 && rook2 -> 3
+        rook1          -> 1
+        rook2          -> 2
+        else           -> 0
+    }
 }
 
 /**
@@ -93,8 +98,8 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int{
-    val d1: Int = Math.abs(kingX-bishopX)
-    val d2: Int = Math.abs(kingY-bishopY)
+    val d1 = Math.abs(kingX - bishopX)
+    val d2 = Math.abs(kingY - bishopY)
     return when {
         kingX == rookX || kingY == rookY -> if(d1 == d2) 3 else 1
         d1 == d2                         -> 2
@@ -111,43 +116,29 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int{
-    if(a+b>c && a+c>b && b+c>a){
-        val x: Double //max side
-        val y: Double
-        val z: Double
+    val x: Double //max side
+    val y: Double
+    val z: Double
 
-        if(a>b){
-            if(a>c) {
-                x = a
-                y = b
-                z = c
-            }
-            else{
-                x = c
-                y = a
-                z = b
-            }
-        }
-        else if(b>c){
-            x = b
-            y = a
-            z = c
-        }
-        else{
-            x = c
-            y = a
-            z = b
-        }
-
-
-        return when{
-            sqr(x) < sqr(y)+sqr(z)  -> 0
-            sqr(x) == sqr(y)+sqr(z) -> 1
-            else                    -> 2
-        }
+    if(Math.max(a, b) > (Math.max(b, c))){
+        x = a
+        y = b
+        z = c
     }
-    else return -1
+    else{
+        x = Math.max(b, c)
+        y = Math.min(b, c)
+        z = a
+    }
+
+    return when{
+        y + z <= x                -> -1
+        sqr(x) < sqr(y) + sqr(z)  ->  0
+        sqr(x) == sqr(y) + sqr(z) ->  1
+        else                      ->  2
+    }
 }
+
 
 /**
  * Средняя
@@ -157,11 +148,8 @@ fun triangleKind(a: Double, b: Double, c: Double): Int{
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int{
-    return if(b>=c && d>=a){
-        when {
-            a>=c -> if(d>=b) Math.abs(b-a) else Math.abs(d-a)
-            else -> if(b>=d) Math.abs(d-c) else Math.abs(b-c)
-        }
-    } else -1
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = when {
+    b < c || d < a -> -1
+    a >= c         -> if(d >= b) Math.abs(b - a) else Math.abs(d - a)
+    else           -> if(b >= d) Math.abs(d - c) else Math.abs(b - c)
 }

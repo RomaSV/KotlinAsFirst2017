@@ -18,13 +18,12 @@ fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
  * Определить, счастливое ли заданное число, вернуть true, если это так.
  */
 fun isNumberHappy(number: Int): Boolean{
-    val strNumber: String = number.toString()
-    val digit1: Int = strNumber[0].toInt()
-    val digit2: Int = strNumber[1].toInt()
-    val digit3: Int = strNumber[2].toInt()
-    val digit4: Int = strNumber[3].toInt()
+    val digit4 = number % 10
+    val digit3 = number / 10 % 10
+    val digit2 = number / 100 % 10
+    val digit1 = number / 1000
 
-    return (digit1+digit2)==(digit3+digit4)
+    return (digit1 + digit2) == (digit3 + digit4)
 }
 
 /**
@@ -35,15 +34,10 @@ fun isNumberHappy(number: Int): Boolean{
  * Считать, что ферзи не могут загораживать друг друга.
  */
 fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean{
-    val dx: Int = Math.abs(x1-x2)
-    val dy: Int = Math.abs(y1-y2)
+    val dx: Int = Math.abs(x1 - x2)
+    val dy: Int = Math.abs(y1 - y2)
 
-    return when{
-        dx == dy -> true
-        dx == 0  -> true
-        dy == 0  -> true
-        else     -> false
-    }
+    return dx == dy || dx == 0 || dy == 0
 }
 
 /**
@@ -55,14 +49,11 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean{
  */
 fun circleInside(x1: Double, y1: Double, r1: Double,
                  x2: Double, y2: Double, r2: Double): Boolean{
-    val dx: Double = Math.abs(x1-x2)
-    val dy: Double = Math.abs(y1-y2)
-    val delta: Double = Math.sqrt(sqr(dx)+sqr(dy))
+    val dx    = Math.abs(x1 - x2)
+    val dy    = Math.abs(y1 - y2)
+    val delta = Math.sqrt(sqr(dx) + sqr(dy))
 
-    return when{
-        r1 + delta <= r2 -> true
-        else             -> false
-    }
+    return r1 + delta <= r2
 }
 
 /**
@@ -75,9 +66,9 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
  * Вернуть true, если кирпич пройдёт
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean = when{
-    (a<=r && b<=s) || (a<=s && b<=r) -> true
-    (b<=r && c<=s) || (b<=s && c<=r) -> true
-    (c<=r && a<=s) || (c<=s && a<=r) -> true
-    else                             -> false
+    (a <= r && b <= s) || (a <= s && b <= r) -> true
+    (b <= r && c <= s) || (b <= s && c <= r) -> true
+    (c <= r && a <= s) || (c <= s && a <= r) -> true
+    else                                     -> false
     }
 
