@@ -154,6 +154,8 @@ class Tests {
         assertEquals(0.0, sin(Math.PI, 1e-5), 1e-5)
         assertEquals(-1.0, sin(3.0 * Math.PI / 2.0, 1e-5), 1e-5)
         assertEquals(0.0, sin(100 * Math.PI, 1e-5), 1e-5)
+        assertEquals(0.5, sin(Math.PI / 6.0, 1e-5), 1e-5)
+        assertEquals(0.017452406459518247, sin(-18.832102629018816, 1e-10), 1e-5)
     }
 
     @Test
@@ -164,6 +166,7 @@ class Tests {
         assertEquals(-1.0, cos(Math.PI, 1e-5), 1e-5)
         assertEquals(0.0, cos(3.0 * Math.PI / 2.0, 1e-5), 1e-5)
         assertEquals(1.0, cos(100 * Math.PI, 1e-5), 1e-5)
+        assertEquals(0.5, cos(Math.PI / 3.0, 1e-5), 1e-5)
     }
 
     @Test
@@ -175,6 +178,7 @@ class Tests {
         assertEquals(111, revert(111))
         assertEquals(17571, revert(17571))
         assertEquals(123456789, revert(987654321))
+        assertEquals(10571, revert(17501))
     }
 
     @Test

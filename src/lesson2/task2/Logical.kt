@@ -17,7 +17,7 @@ fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
  * Четырехзначное число назовем счастливым, если сумма первых двух ее цифр равна сумме двух последних.
  * Определить, счастливое ли заданное число, вернуть true, если это так.
  */
-fun isNumberHappy(number: Int): Boolean{
+fun isNumberHappy(number: Int): Boolean {
     val digit4 = number % 10
     val digit3 = number / 10 % 10
     val digit2 = number / 100 % 10
@@ -33,9 +33,9 @@ fun isNumberHappy(number: Int): Boolean{
  * Определить, угрожают ли они друг другу. Вернуть true, если угрожают.
  * Считать, что ферзи не могут загораживать друг друга.
  */
-fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean{
-    val dx: Int = Math.abs(x1 - x2)
-    val dy: Int = Math.abs(y1 - y2)
+fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
+    val dx = Math.abs(x1 - x2)
+    val dy = Math.abs(y1 - y2)
 
     return dx == dy || dx == 0 || dy == 0
 }
@@ -48,7 +48,7 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean{
  * Вернуть true, если утверждение верно
  */
 fun circleInside(x1: Double, y1: Double, r1: Double,
-                 x2: Double, y2: Double, r2: Double): Boolean{
+                 x2: Double, y2: Double, r2: Double): Boolean {
     val dx    = Math.abs(x1 - x2)
     val dy    = Math.abs(y1 - y2)
     val delta = Math.sqrt(sqr(dx) + sqr(dy))
@@ -65,10 +65,15 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
  * кирпич 4 х 4 х 4 пройдёт через отверстие 4 х 4.
  * Вернуть true, если кирпич пройдёт
  */
-fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean = when{
-    (a <= r && b <= s) || (a <= s && b <= r) -> true
-    (b <= r && c <= s) || (b <= s && c <= r) -> true
-    (c <= r && a <= s) || (c <= s && a <= r) -> true
-    else                                     -> false
-    }
+fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean = when {
+    /**
+    Или упростить в данном случае = записать в одно выражение?
+    Через when лучше логика видна
+    Или нет?
+     */
+    a <= r && (b <= s || c <= s) -> true
+    b <= r && (a <= s || c <= s) -> true
+    c <= r && (a <= s || c <= s) -> true
+    else                         -> false
+}
 
