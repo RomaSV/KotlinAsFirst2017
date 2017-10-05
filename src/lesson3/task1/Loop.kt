@@ -157,7 +157,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
 fun squareBetweenExists(m: Int, n: Int): Boolean {
     for(i in m..n) {
         val root = Math.sqrt(i.toDouble())
-        if(root / root.toInt() == 1.0) return true
+        if(root == 0.0 || root / root.toInt() == 1.0) return true
     }
     return false
 }
@@ -213,7 +213,8 @@ fun trig(type: Char, x: Double, eps: Double): Double {
         i += 2
         j *= -1
     }
-
+    println(-18.84955592153876/Math.PI
+    )
     return res
 }
 
@@ -309,18 +310,18 @@ fun squareSequenceDigit(n: Int): Int {
         var quad = Math.pow(j, 2.0).toInt()
         var rQuad = revert(quad)
 
+        while(rQuad > 0) {
+            if(i == n) return rQuad % 10
+            i++
+            rQuad /= 10
+        }
+
         while(quad % 10 == 0) {
             if(i == n) return 0
             i++
             quad /= 10
         }
 
-        while(rQuad > 0) {
-            if(i == n) return rQuad % 10
-            i++
-            rQuad /= 10
-
-        }
         j++
     }
     return -1
@@ -345,17 +346,17 @@ fun fibSequenceDigit(n: Int): Int {
         tmp1 = tmp2
         tmp2 = num
 
-        while(num % 10 == 0) {
-            if(i == n) return 0
-            i++
-            num /= 10
-        }
-
         while(rnum > 0) {
             if(i == n) return rnum % 10
             i++
             rnum /= 10
 
+        }
+
+        while(num % 10 == 0) {
+            if(i == n) return 0
+            i++
+            num /= 10
         }
 
     }
