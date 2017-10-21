@@ -147,7 +147,7 @@ fun isCoPrime(m: Int, n: Int): Boolean = nod(m, n) == 1
 fun squareBetweenExists(m: Int, n: Int): Boolean {
     val a = Math.sqrt(m.toDouble())
     val b = Math.sqrt(n.toDouble())
-    return Math.floor(b) >= a
+    return Math.floor(b) >= Math.ceil(a)
 }
 
 /**
@@ -191,7 +191,7 @@ fun trig(t: type, x: Double, eps: Double): Double {
         }
         res += a * j
         i += 2
-        j *= -1
+        j = -j
     }
     return res
 }
@@ -219,7 +219,7 @@ fun revert(n: Int): Int {
     val len = digitNumber(n)
     var res = 0
 
-    for(i in len-1 downTo 0) {
+    for(i in len - 1 downTo 0) {
         res += (num % 10) * Math.pow(10.0, i.toDouble()).toInt()
         num /= 10
     }
@@ -283,7 +283,7 @@ fun squareSequenceDigit(n: Int): Int {
         val len = digitNumber(quad)
 
         if ((i + len - 1) >= n) {
-            return digitAt(quad, (n - (i - 1)), len)
+            return digitAt(quad, n - i + 1, len)
         }
         i += len
         j++
@@ -299,18 +299,18 @@ fun squareSequenceDigit(n: Int): Int {
  * Например, 2-я цифра равна 1, 9-я 2, 14-я 5.
  */
 fun fibSequenceDigit(n: Int): Int {
-    var tmp1 = 1
-    var tmp2 = 1
+    var element = 1
+    var nextElement = 1
     var i = 3
 
-    while(i <= n && n !in 1..2 ) {
-        val num = tmp1 + tmp2
+    while(i <= n) {
+        val num = element + nextElement
         val len = digitNumber(num)
-        tmp1 = tmp2
-        tmp2 = num
+        element = nextElement
+        nextElement = num
 
         if ((i + len - 1) >= n) {
-            return digitAt(num, (n - (i - 1)), len)
+            return digitAt(num, n - i + 1, len)
         }
         i += len
     }
