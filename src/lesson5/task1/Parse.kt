@@ -66,7 +66,26 @@ fun main(args: Array<String>) {
  * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
  * При неверном формате входной строки вернуть пустую строку
  */
-fun dateStrToDigit(str: String): String = TODO()
+
+fun dateStrToDigit(str: String): String {
+    val months = listOf("января", "февраля","марта","апреля","мая", "июня", "июля",
+                        "августа", "сентября", "октября", "ноября", "декабря")
+
+    val date = str.split(" ")
+    val result = mutableListOf<Int>()
+    try {
+        result.add(date[0].toInt())
+        for (i in 0 until months.size) {
+            if (date[1] == months[i]) result.add(i + 1)
+        }
+        result.add(date[2].toInt())
+    }
+    catch (e: Exception) {
+        return ""
+    }
+
+    return if (result.size == 3) String.format("%02d.%02d.%02d", result[0], result[1], result[2]) else ""
+}
 
 /**
  * Средняя
@@ -89,7 +108,22 @@ fun dateDigitToStr(digital: String): String = TODO()
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    val rawData = phone.split(" ", "(", ")", "-")
+    var result = ""
+    var prefix = false
+
+    if (rawData[0][0] == '+') prefix = true
+    for (element in rawData) {
+        try {
+            result += element.toInt()
+        }
+        catch (e: NumberFormatException) {
+            if (element !in " ()-") return ""
+        }
+    }
+    return if (prefix) "+$result" else result
+}
 
 /**
  * Средняя
@@ -101,7 +135,19 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    val rawData = jumps.split(" ")
+    var results = listOf<Int>()
+    for (element in rawData) {
+        try {
+            results += element.toInt()
+        }
+        catch (e: NumberFormatException) {
+            if (element !in "-%") return -1
+        }
+    }
+    return if (results.isNotEmpty()) results.max()!! else -1
+}
 
 /**
  * Сложная
@@ -113,7 +159,21 @@ fun bestLongJump(jumps: String): Int = TODO()
  * Прочитать строку и вернуть максимальную взятую высоту (230 в примере).
  * При нарушении формата входной строки вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    val rawData = jumps.split(" ")
+    var result = -1
+    for (i in 0 until rawData.size - 1) {
+        try {
+            if ('+' in rawData[i + 1]) {
+                result = rawData[i].toInt()
+            }
+        }
+        catch (e: NumberFormatException) {
+            if (rawData[i] !in "+-%") return -1
+        }
+    }
+    return result
+}
 
 /**
  * Сложная
@@ -124,7 +184,28 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val rawData = expression.split(" ")
+    var result = 0
+    try {
+        result += rawData[0].toInt()
+    }
+    catch (e: NumberFormatException) { throw IllegalArgumentException() }
+    for (i in 1 until rawData.size) {
+        try {
+            if (rawData[i - 1] == "+") {
+                result += rawData[i].toInt()
+            }
+            else if (rawData[i - 1] == "-") {
+                result -= rawData[i].toInt()
+            }
+        }
+        catch (e: NumberFormatException) {
+            if (rawData[i] !in "+-") throw IllegalArgumentException()
+        }
+    }
+    return result
+}
 
 /**
  * Сложная
@@ -135,7 +216,10 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val exp = Regex("""([^\s]+)\s\1""").find(str.toLowerCase()) ?: return -1
+    return exp.range.first
+}
 
 /**
  * Сложная
