@@ -73,6 +73,9 @@ fun dateStrToDigit(str: String): String {
 
     val date = str.split(" ")
     val result = mutableListOf<Int>()
+
+    if (date.size != 3) return ""
+
     try {
         result.add(date[0].toInt())
         for (i in 0 until months.size) {
@@ -80,7 +83,7 @@ fun dateStrToDigit(str: String): String {
         }
         result.add(date[2].toInt())
     }
-    catch (e: Exception) {
+    catch (e: NumberFormatException) {
         return ""
     }
 
