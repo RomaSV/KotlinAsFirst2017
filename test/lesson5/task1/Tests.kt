@@ -39,6 +39,7 @@ class Tests {
         assertEquals("", dateStrToDigit("23"))
         assertEquals("03.04.2011", dateStrToDigit("3 апреля 2011"))
         assertEquals("", dateStrToDigit("the answer is 42"))
+        assertEquals("02.02.1", dateStrToDigit("02 февраля 1"))
     }
 
     @Test
@@ -59,6 +60,7 @@ class Tests {
         assertEquals("", flattenPhoneNumber("ab-123"))
         assertEquals("+12345", flattenPhoneNumber("+12 (3) 4-5"))
         assertEquals("", flattenPhoneNumber("134_+874"))
+        assertEquals("", flattenPhoneNumber(" "))
     }
 
     @Test
@@ -78,6 +80,10 @@ class Tests {
         assertEquals(-1, bestHighJump("???"))
         assertEquals(230, bestHighJump("220 + 224 %+ 228 %- 230 + 232 %%- 234 %"))
         assertEquals(230, bestHighJump("220 + 224 %+ 228 %- 230 %%%+ 232 %%- 234 %"))
+        assertEquals(751762492,
+                bestHighJump("147483648 %%- 1 %- 0 + 147483647 %- 1 %+ 1 %+ 438248578 + 648977398 %%- 1 %%- " +
+                        "147483647 %%- 147483647 %+ 556336608 %- 404231010 + 147483648 %- 147483647 %%- 60092747 %%+ " +
+                        "128564755 %+ 1 %+ 0 %%- 751762492 + 147483647 %%- 1 %%- 795740786 %%- 1 %+ 0 %- 178573154 + 0 %%-"))
     }
 
     @Test
@@ -96,6 +102,8 @@ class Tests {
         assertEquals(9, firstDuplicateIndex("Он пошёл в в школу"))
         assertEquals(40, firstDuplicateIndex("Яблоко упало на ветку с ветки оно упало на на землю"))
         assertEquals(9, firstDuplicateIndex("Мы пошли прямо Прямо располагался магазин"))
+        assertEquals(-1, firstDuplicateIndex("9i=>yp\\np0\\\\z./zQYj&6c)C<)n[+7;q?}e1:Hf'zj N\\n^z]j#~e8" +
+                "{/_4:%|@.`VJU|75Pn#OCMg\\\"N;B3t dR`c-yaM7Q{h)sN9oMtSmH3>Zi+'G.4)]{-=lT|^:~hsw<I{?z<H.]VWp<bXnBHC  Q3>]:QW_qty5p5p"))
     }
 
     @Test
@@ -129,7 +137,7 @@ class Tests {
         assertEquals(listOf(0, 0, 0, 0, 0, 1, 1, 0, 0, 0), computeDeviceCells(10, "+>+>+>+>+", 4))
         assertEquals(listOf(0, 0, -1, -1, -1, 0, 0, 0, 0, 0), computeDeviceCells(10, "<-<-<-<-<-", 6))
         assertEquals(listOf(1, 1, 1, 0, 0, -1, 0, 0, 0, 0), computeDeviceCells(10, "- <<<<< +[>+]", 17))
-        //assertEquals(listOf(0, 6, 5, 4, 3, 2, 1, 0, -1, -1, -2),
-        //        computeDeviceCells(11, "<<<<< + >>>>>>>>>> --[<-] >+[>+] >++[--< <[<] >+[>+] >++]", 256))
+        assertEquals(listOf(0, 6, 5, 4, 3, 2, 1, 0, -1, -1, -2),
+                computeDeviceCells(11, "<<<<< + >>>>>>>>>> --[<-] >+[>+] >++[--< <[<] >+[>+] >++]", 256))
     }
 }

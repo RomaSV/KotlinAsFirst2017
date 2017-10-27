@@ -221,6 +221,7 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
 fun convert(n: Int, base: Int): List<Int> {
     var result = listOf<Int>()
     var num = n
+    if (num == 0) return listOf(0)
     while (num > 0) {
         result += num % base
         num /= base
@@ -239,6 +240,7 @@ fun convert(n: Int, base: Int): List<Int> {
 fun convertToString(n: Int, base: Int): String {
     var result = listOf<Char>()
     var num = n
+    if (num == 0) return "0"
     while (num > 0) {
         result += when (num % base) {
             in 10..35 -> (87 + (num % base)).toChar() //'a' - 97
@@ -303,6 +305,13 @@ fun roman(n: Int): String {
         var digit = num % 10
         var flag = false
 
+        if (digitPos == 4) {
+            var a = ""
+            for (i in 1..digit*10) a += "M"
+            result += a
+            break
+        }
+
         if (digit > 5 && digit != 9) {
             digit -= 5
             flag = true
@@ -361,18 +370,22 @@ fun russian(n: Int): String {
             digit == 2 && (i in 2..3 || i == 5) -> "две"
             digit == 2                          -> "два"
             digit == 3 -> "три"
+            digit == 4 && (i == 1 || i == 4) -> "сорок"
             digit == 4 -> "четыре"
             digit == 5 -> "пять"
             digit == 6 -> "шесть"
             digit == 7 -> "семь"
             digit == 8 -> "восемь"
+            digit == 9 && (i == 1 || i == 4) -> "девяно"
             digit == 9 -> "девять"
             else       -> ""
         }
 
         element += when {
             i == 1 && digit in 0..1 -> ""
+            i == 1 && digit == 4    -> ""
             i == 1 && digit in 2..3 -> "дцать"
+            i == 1 && digit == 9    -> "сто"
             i == 1                  -> "десят"
             i == 2 && digit == 0    -> ""
             i == 2 && digit == 1    -> "сто"
@@ -385,6 +398,8 @@ fun russian(n: Int): String {
             i == 3                  -> " тысяч"
             i == 4 && digit in 0..1 -> ""
             i == 4 && digit in 2..3 -> "дцать"
+            i == 4 && digit == 4    -> ""
+            i == 4 && digit == 9    -> "сто"
             i == 4                  -> "десят"
             i == 5 && digit == 1    -> "сто"
             i == 5 && digit == 2    -> "сти"

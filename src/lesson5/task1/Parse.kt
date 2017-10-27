@@ -68,8 +68,8 @@ fun main(args: Array<String>) {
  */
 
 fun dateStrToDigit(str: String): String {
-    val months = listOf("января", "февраля","марта","апреля","мая", "июня", "июля",
-                        "августа", "сентября", "октября", "ноября", "декабря")
+    val months = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля",
+            "августа", "сентября", "октября", "ноября", "декабря")
 
     val date = str.split(" ")
     val result = mutableListOf<Int>()
@@ -82,12 +82,11 @@ fun dateStrToDigit(str: String): String {
             if (date[1] == months[i]) result.add(i + 1)
         }
         result.add(date[2].toInt())
-    }
-    catch (e: NumberFormatException) {
+    } catch (e: NumberFormatException) {
         return ""
     }
 
-    return if (result.size == 3) String.format("%02d.%02d.%02d", result[0], result[1], result[2]) else ""
+    return if (result.size == 3) String.format("%02d.%02d.%d", result[0], result[1], result[2]) else ""
 }
 
 /**
@@ -116,12 +115,16 @@ fun flattenPhoneNumber(phone: String): String {
     var result = ""
     var prefix = false
 
-    if (rawData[0][0] == '+') prefix = true
+    try {
+        if (rawData[0][0] == '+') prefix = true
+    } catch (e: StringIndexOutOfBoundsException) {
+        return ""
+    }
+
     for (element in rawData) {
         try {
             result += element.toInt()
-        }
-        catch (e: NumberFormatException) {
+        } catch (e: NumberFormatException) {
             if (element !in " ()-") return ""
         }
     }
@@ -141,11 +144,11 @@ fun flattenPhoneNumber(phone: String): String {
 fun bestLongJump(jumps: String): Int {
     val rawData = jumps.split(" ")
     var results = listOf<Int>()
+
     for (element in rawData) {
         try {
             results += element.toInt()
-        }
-        catch (e: NumberFormatException) {
+        } catch (e: NumberFormatException) {
             if (element !in "-%") return -1
         }
     }
@@ -164,18 +167,18 @@ fun bestLongJump(jumps: String): Int {
  */
 fun bestHighJump(jumps: String): Int {
     val rawData = jumps.split(" ")
-    var result = -1
+    var result = listOf<Int>()
+
     for (i in 0 until rawData.size - 1) {
         try {
             if ('+' in rawData[i + 1]) {
-                result = rawData[i].toInt()
+                result += rawData[i].toInt()
             }
-        }
-        catch (e: NumberFormatException) {
+        } catch (e: NumberFormatException) {
             if (rawData[i] !in "+-%") return -1
         }
     }
-    return result
+    return result.max() ?: -1
 }
 
 /**
@@ -192,18 +195,17 @@ fun plusMinus(expression: String): Int {
     var result = 0
     try {
         result += rawData[0].toInt()
+    } catch (e: NumberFormatException) {
+        throw IllegalArgumentException()
     }
-    catch (e: NumberFormatException) { throw IllegalArgumentException() }
     for (i in 1 until rawData.size) {
         try {
             if (rawData[i - 1] == "+") {
                 result += rawData[i].toInt()
-            }
-            else if (rawData[i - 1] == "-") {
+            } else if (rawData[i - 1] == "-") {
                 result -= rawData[i].toInt()
             }
-        }
-        catch (e: NumberFormatException) {
+        } catch (e: NumberFormatException) {
             if (rawData[i] !in "+-") throw IllegalArgumentException()
         }
     }
@@ -220,7 +222,7 @@ fun plusMinus(expression: String): Int {
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int {
-    val exp = Regex("""([^\s]+)\s\1""").find(str.toLowerCase()) ?: return -1
+    val exp = Regex("""(\b[^\s]+)\s+\1""").find(str.toLowerCase()) ?: return -1
     return exp.range.first
 }
 
