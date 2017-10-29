@@ -305,13 +305,12 @@ fun roman(n: Int): String {
         var digit = num % 10
         var flag = false
 
-        if (digitPos == 4) {
+        if (digitPos == 3) {
             var a = ""
-            for (i in 1..digit*10) a += "M"
+            for (i in 1..num) a += "M"
             result += a
             break
         }
-
         if (digit > 5 && digit != 9) {
             digit -= 5
             flag = true
@@ -355,7 +354,7 @@ fun russian(n: Int): String {
         if (digit == 1 && i == 4) result += "тысяч"
         element += when {
             digit == 1 && (i == 1 || i == 4) && lastDigit == 0 -> "десять"
-            digit == 1 && (i == 1 || i == 4) && lastDigit == 1 -> "одинадцать"
+            digit == 1 && (i == 1 || i == 4) && lastDigit == 1 -> "одиннадцать"
             digit == 1 && (i == 1 || i == 4) && lastDigit == 2 -> "двенадцать"
             digit == 1 && (i == 1 || i == 4) && lastDigit == 3 -> "тринадцать"
             digit == 1 && (i == 1 || i == 4) && lastDigit == 4 -> "четырнадцать"
