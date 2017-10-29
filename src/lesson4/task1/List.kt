@@ -361,7 +361,7 @@ fun russian(n: Int): String {
             digit == 1 && (i == 1 || i == 4) && lastDigit == 5 -> "пятнадцать"
             digit == 1 && (i == 1 || i == 4) && lastDigit == 6 -> "шестнадцать"
             digit == 1 && (i == 1 || i == 4) && lastDigit == 7 -> "семнадцать"
-            digit == 1 && (i == 1 || i == 4) && lastDigit == 8 -> "восемнадцтаь"
+            digit == 1 && (i == 1 || i == 4) && lastDigit == 8 -> "восемнадцать"
             digit == 1 && (i == 1 || i == 4) && lastDigit == 9 -> "девятнадцать"
             digit == 1 && (i == 2 || i == 5)    -> ""
             digit == 1 &&  i == 3               -> "одна"
