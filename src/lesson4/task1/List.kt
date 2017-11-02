@@ -173,11 +173,10 @@ fun polynom(p: List<Double>, x: Double): Double {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Double>): MutableList<Double> {
-    val listCopy = list.toList()
-    for (i in 1 until list.size) {
-        for (j in 0 until i) {
-            list[i] += listCopy[j]
-        }
+    var sum = 0.0
+    for (i in 0 until list.size) {
+        sum += list[i]
+        list[i] = sum
     }
     return list
 }
@@ -243,8 +242,8 @@ fun convertToString(n: Int, base: Int): String {
     if (num == 0) return "0"
     while (num > 0) {
         result += when (num % base) {
-            in 10..35 -> (87 + (num % base)).toChar() //'a' - 97
-            else      -> (48 + (num % base)).toChar() //'0' - 48
+            in 10..35 -> ('a'.toInt() - 10 + (num % base)).toChar() //'a' - 97, вычитаем 10, т.к. 'a' - десятая
+            else      -> ('0'.toInt() + (num % base)).toChar()      //'0' - 48
         }
         num /= base
     }
@@ -280,8 +279,8 @@ fun decimalFromString(str: String, base: Int): Int {
     var result = 0
     for (i in 0 until str.length) {
         val n = when (str[i].toInt()){
-            in 97..122 -> str[i].toInt() - 87
-            else       -> str[i].toInt() - 48
+            in 'a'.toInt()..'z'.toInt() -> str[i].toInt() - 87
+            else                        -> str[i].toInt() - 48
         }
         result += n * Math.pow(base.toDouble(), (str.length - i - 1).toDouble()).toInt()
     }
