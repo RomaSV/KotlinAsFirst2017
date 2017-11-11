@@ -96,7 +96,7 @@ fun fib(n: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 
-fun nod(m: Int, n: Int): Int {
+fun gcd(m: Int, n: Int): Int {
     var a = m
     var b = n
     var tmp: Int
@@ -110,7 +110,7 @@ fun nod(m: Int, n: Int): Int {
     return a
 }
 
-fun lcm(m: Int, n: Int): Int = m * n / nod(m, n)
+fun lcm(m: Int, n: Int): Int = n / gcd(m, n) * m
 
 
 /**
@@ -119,10 +119,10 @@ fun lcm(m: Int, n: Int): Int = m * n / nod(m, n)
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    for (i in 2..n) {
+    for (i in 2..Math.sqrt(n.toDouble()).toInt()) {
         if (n % i == 0) return i
     }
-    return -1
+    return n
 }
 
 /**
@@ -144,7 +144,7 @@ fun maxDivisor(n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean = nod(m, n) == 1
+fun isCoPrime(m: Int, n: Int): Boolean = gcd(m, n) == 1
 
 /**
  * Простая

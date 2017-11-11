@@ -72,21 +72,24 @@ fun dateStrToDigit(str: String): String {
             "августа", "сентября", "октября", "ноября", "декабря")
 
     val date = str.split(" ")
-    val result = mutableListOf<Int>()
+    val dd: Int
+    val mm: Int
+    val yy: Int
 
     if (date.size != 3) return ""
 
     try {
-        result.add(date[0].toInt())
-        for (i in 0 until months.size) {
-            if (date[1] == months[i]) result.add(i + 1)
-        }
-        result.add(date[2].toInt())
+        dd = date[0].toInt()
+        mm = months.indexOf(date[1]) + 1
+        yy = date[2].toInt()
     } catch (e: NumberFormatException) {
         return ""
     }
-
-    return if (result.size == 3) String.format("%02d.%02d.%d", result[0], result[1], result[2]) else ""
+    return when {
+        dd !in 1..31 -> ""
+        mm == 0      -> ""
+        else         -> String.format("%02d.%02d.%d", dd, mm, yy)
+    }
 }
 
 /**
@@ -112,23 +115,20 @@ fun dateDigitToStr(digital: String): String = TODO()
  */
 fun flattenPhoneNumber(phone: String): String {
     val rawData = phone.split(" ", "(", ")", "-")
-    var result = ""
+    val result = mutableListOf<Int>()
     var prefix = false
 
-    try {
-        if (rawData[0][0] == '+') prefix = true
-    } catch (e: StringIndexOutOfBoundsException) {
-        return ""
-    }
+    if (rawData[0].isEmpty()) return ""
+    if (rawData[0][0] == '+') prefix = true
 
     for (element in rawData) {
         try {
-            result += element.toInt()
+            result.add(element.toInt())
         } catch (e: NumberFormatException) {
-            if (element !in " ()-") return ""
+            if (element != "") return ""
         }
     }
-    return if (prefix) "+$result" else result
+    return if (prefix) "+${result.joinToString(separator = "")}" else result.joinToString(separator = "")
 }
 
 /**
@@ -142,15 +142,13 @@ fun flattenPhoneNumber(phone: String): String {
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    val rawData = jumps.split(" ")
-    var results = listOf<Int>()
+    val rawData = jumps.split(" ").filter { it !in "-%" }
+    val results: List<Int>
 
-    for (element in rawData) {
-        try {
-            results += element.toInt()
-        } catch (e: NumberFormatException) {
-            if (element !in "-%") return -1
-        }
+    try {
+        results = rawData.map { it.toInt() }
+    } catch (e: NumberFormatException) {
+        return -1
     }
     return if (results.isNotEmpty()) results.max()!! else -1
 }
@@ -166,16 +164,16 @@ fun bestLongJump(jumps: String): Int {
  * При нарушении формата входной строки вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    val rawData = jumps.split(" ")
+    val rawData = jumps.filter { it !in "-%" }.split(" ")
     var result = listOf<Int>()
 
-    for (i in 0 until rawData.size - 1) {
+    for (i in 0 until rawData.size - 1 step 2) {
         try {
             if ('+' in rawData[i + 1]) {
                 result += rawData[i].toInt()
             }
         } catch (e: NumberFormatException) {
-            if (rawData[i] !in "+-%") return -1
+            return -1
         }
     }
     return result.max() ?: -1
@@ -198,7 +196,7 @@ fun plusMinus(expression: String): Int {
     } catch (e: NumberFormatException) {
         throw IllegalArgumentException()
     }
-    for (i in 1 until rawData.size) {
+    for (i in 2 until rawData.size step 2) {
         try {
             if (rawData[i - 1] == "+") {
                 result += rawData[i].toInt()
@@ -206,7 +204,7 @@ fun plusMinus(expression: String): Int {
                 result -= rawData[i].toInt()
             }
         } catch (e: NumberFormatException) {
-            if (rawData[i] !in "+-") throw IllegalArgumentException()
+            throw IllegalArgumentException()
         }
     }
     return result

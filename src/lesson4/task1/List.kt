@@ -237,19 +237,15 @@ fun convert(n: Int, base: Int): List<Int> {
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
 fun convertToString(n: Int, base: Int): String {
-    var result = listOf<Char>()
-    var num = n
-    if (num == 0) return "0"
-    while (num > 0) {
-        result += when (num % base) {
-            in 10..35 -> ('a'.toInt() - 10 + (num % base)).toChar() //'a' - 97, вычитаем 10, т.к. 'a' - десятая
-            else      -> ('0'.toInt() + (num % base)).toChar()      //'0' - 48
+    val result = mutableListOf<Char>()
+    for (num in convert(n, base)) {
+        result += when (num) {
+            in 10..35 -> 'a' - 10 + (num % base) //вычитаем 10, т.к. 'a' - десятая
+            else      -> '0' + (num % base)
         }
-        num /= base
     }
-    return result.reversed().joinToString(separator = "")
+    return result.joinToString(separator = "")
 }
-
 
 /**
  * Средняя
@@ -276,15 +272,15 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * Например: str = "13c", base = 14 -> 250
  */
 fun decimalFromString(str: String, base: Int): Int {
-    var result = 0
+    var result = listOf<Int>()
     for (i in 0 until str.length) {
-        val n = when (str[i].toInt()){
-            in 'a'.toInt()..'z'.toInt() -> str[i].toInt() - 87
-            else                        -> str[i].toInt() - 48
+        val n = when (str[i]){
+            in 'a'..'z' -> str[i] - 'a' + 10
+            else        -> str[i] - '0'
         }
-        result += n * Math.pow(base.toDouble(), (str.length - i - 1).toDouble()).toInt()
+        result += n
     }
-    return result
+    return decimal(result, base)
 }
 
 /**
@@ -296,40 +292,30 @@ fun decimalFromString(str: String, base: Int): Int {
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 fun roman(n: Int): String {
-    val roman = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
-    var num = n
-    var result = listOf<String>()
-    var digitPos = 0
-    while(num > 0) {
-        var digit = num % 10
-        var flag = false
+    val romanMain  = listOf("I", "X", "C")
+    val romanFives = listOf("V", "L", "D")
+    val romanFours = listOf("IV", "XL", "CD")
+    val romanNines = listOf("IX", "XC", "CM")
+    val len = n.toString().length
+    val result = mutableListOf<String>()
 
-        if (digitPos == 3) {
-            var a = ""
-            for (i in 1..num) a += "M"
-            result += a
-            break
-        }
+    for (i in 0 until n/1000) result.add("M")
+
+    for (i in 1..len){
+        var digit = lesson3.task1.digitAt(n % 1000, i, len)
+
         if (digit > 5 && digit != 9) {
+            result.add(romanFives[len - i])
             digit -= 5
-            flag = true
         }
         when (digit) {
-            in 1..3 -> {
-                var a = ""
-                for (i in 1..digit) a += roman[digitPos * 4]
-                result += a
-            }
-            4 -> result += roman[digitPos * 4 + 1]
-            5 -> result += roman[digitPos * 4 + 2]
-            9 -> result += roman[(digitPos + 1) * 4 - 1]
+            in 1..3 -> for (j in 1..digit) result.add(romanMain[len - i])
+            4       -> result.add(romanFours[len - i])
+            5       -> result.add(romanFives[len - i])
+            9       -> result.add(romanNines[len - i])
         }
-        if (flag) result += roman[digitPos * 4 + 2]
-
-        num /= 10
-        digitPos++
     }
-    return result.asReversed().joinToString(separator = "")
+    return result.joinToString(separator = "")
 }
 
 /**
@@ -340,78 +326,59 @@ fun roman(n: Int): String {
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 fun russian(n: Int): String {
-    var i = 0
-    var num = n
-    var lastDigit = num % 10
-    var result = listOf<String>()
+    val result = mutableListOf<String>()
+    val units = digitsToRussian(n % 1000, false)
+    val thousands = thousandsOf(n / 1000)
 
-    while(num > 0) {
-        val digit = num % 10
-        var element = ""
+    if (thousands.isNotEmpty()) result.add(thousands)
+    if (units.isNotEmpty())     result.add(units)
 
-        if (digit == 1 && (i == 1 || i == 4)) result = result.dropLast(1)
-        if (digit == 1 && i == 4) result += "тысяч"
-        element += when {
-            digit == 1 && (i == 1 || i == 4) && lastDigit == 0 -> "десять"
-            digit == 1 && (i == 1 || i == 4) && lastDigit == 1 -> "одиннадцать"
-            digit == 1 && (i == 1 || i == 4) && lastDigit == 2 -> "двенадцать"
-            digit == 1 && (i == 1 || i == 4) && lastDigit == 3 -> "тринадцать"
-            digit == 1 && (i == 1 || i == 4) && lastDigit == 4 -> "четырнадцать"
-            digit == 1 && (i == 1 || i == 4) && lastDigit == 5 -> "пятнадцать"
-            digit == 1 && (i == 1 || i == 4) && lastDigit == 6 -> "шестнадцать"
-            digit == 1 && (i == 1 || i == 4) && lastDigit == 7 -> "семнадцать"
-            digit == 1 && (i == 1 || i == 4) && lastDigit == 8 -> "восемнадцать"
-            digit == 1 && (i == 1 || i == 4) && lastDigit == 9 -> "девятнадцать"
-            digit == 1 && (i == 2 || i == 5)    -> ""
-            digit == 1 &&  i == 3               -> "одна"
-            digit == 1                          -> "один"
-            digit == 2 && (i in 2..3 || i == 5) -> "две"
-            digit == 2                          -> "два"
-            digit == 3 -> "три"
-            digit == 4 && (i == 1 || i == 4) -> "сорок"
-            digit == 4 -> "четыре"
-            digit == 5 -> "пять"
-            digit == 6 -> "шесть"
-            digit == 7 -> "семь"
-            digit == 8 -> "восемь"
-            digit == 9 && (i == 1 || i == 4) -> "девяно"
-            digit == 9 -> "девять"
-            else       -> ""
-        }
+    return result.joinToString(separator = " ")
+}
 
-        element += when {
-            i == 1 && digit in 0..1 -> ""
-            i == 1 && digit == 4    -> ""
-            i == 1 && digit in 2..3 -> "дцать"
-            i == 1 && digit == 9    -> "сто"
-            i == 1                  -> "десят"
-            i == 2 && digit == 0    -> ""
-            i == 2 && digit == 1    -> "сто"
-            i == 2 && digit == 2    -> "сти"
-            i == 2 && digit in 3..4 -> "ста"
-            i == 2                  -> "сот"
-            i == 3 && digit == 0    -> "тысяч"
-            i == 3 && digit == 1    -> " тысяча"
-            i == 3 && digit in 2..4 -> " тысячи"
-            i == 3                  -> " тысяч"
-            i == 4 && digit in 0..1 -> ""
-            i == 4 && digit in 2..3 -> "дцать"
-            i == 4 && digit == 4    -> ""
-            i == 4 && digit == 9    -> "сто"
-            i == 4                  -> "десят"
-            i == 5 && digit == 1    -> "сто"
-            i == 5 && digit == 2    -> "сти"
-            i == 5 && digit in 3..4 -> "ста"
-            i == 5                  -> "сот"
-            else                    -> ""
-        }
-
-        if (element != "") result += element
-
-        i++
-        lastDigit = num % 10
-        num /= 10
+fun thousandsOf(n: Int): String {
+    val digits = digitsToRussian(n, true)
+    val postfix: String = when (n % 10) {
+        1       -> "тысяча"
+        in 2..4 -> "тысячи"
+        else    -> "тысяч"
     }
 
-    return result.asReversed().joinToString(separator = " ")
+    return if (n != 0) "$digits $postfix" else ""
+}
+
+fun digitsToRussian(n: Int, thousandForm: Boolean): String {
+    val digits = mutableListOf<Int>()
+    val result = mutableListOf<String>()
+
+    digits.add(n / 100)
+    if (n % 100 !in 10..19) {
+        digits.add(n / 10 % 10)
+        digits.add(n % 10)
+    } else {
+        digits.add(n % 100)
+    }
+
+    for (i in 0 until digits.size) if (digits[i] != 0) result.add(digits[i].toRussian(i + 1, thousandForm))
+
+    return result.joinToString(separator = " ")
+}
+
+fun Int.toRussian(n: Int, thousandForm: Boolean): String {
+    val rusUnits = listOf("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+    val rusUnitsTF = listOf("одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+    val rusDecades = listOf("десять", "двадцать", "тридцать", "сорок", "пятьдесят",
+                            "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
+    val rusTeens = listOf("одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать",
+                            "шестнадцать", "семндацать", "восемнадцать", "девятнадцать")
+    val rusHundreds = listOf("сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
+
+    val result = mutableListOf<String>()
+
+    when (n) {
+        3 -> result.add(if (!thousandForm)  rusUnits[this - 1] else rusUnitsTF[this - 1])
+        2 -> result.add(if (this / 10 == 0) rusDecades[this - 1] else rusTeens[this - 11])
+        1 -> result.add(rusHundreds[this - 1])
+    }
+    return result.joinToString(separator = " ")
 }
