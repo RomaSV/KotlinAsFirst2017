@@ -238,7 +238,7 @@ fun plusMinus(expression: String): Int {
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int {
-    val exp = Regex("""(\b[^\s\d]+)\s+\1""").find(str.toLowerCase()) ?: return -1
+    val exp = Regex("""(\b[^\s\w]+)\s+\1""").find(str.toLowerCase()) ?: return -1
     return exp.range.first
 }
 
@@ -263,7 +263,7 @@ fun mostExpensive(description: String): String {
         val name = product[0]
         var price: Double
         try { price = product[1].toDouble() } catch(e: NumberFormatException) { return "" }
-        if (price > maxPrice) {
+        if (price >= maxPrice) {
             maxPrice = price
             maxName = name
         }
@@ -333,11 +333,14 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             commands[i] !in " ><+-[]" -> throw IllegalArgumentException()
             commands[i] == '[' -> cycleStack.add(i)
             commands[i] == ']' -> {
+                if (cycleStack.isEmpty()) throw IllegalArgumentException()
                 cycles[i] = cycleStack[cycleStack.lastIndex]
                 cycleStack.removeAt(cycleStack.lastIndex)
             }
         }
     }
+
+    if (cycleStack.isNotEmpty()) throw IllegalArgumentException()
 
     var j = 0
     while (j < commands.length) {

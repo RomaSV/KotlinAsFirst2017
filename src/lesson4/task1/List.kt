@@ -370,7 +370,7 @@ fun Int.toRussian(n: Int, thousandForm: Boolean): String {
     val rusUnitsTF = listOf("одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
     val rusDecades = listOf("десять", "двадцать", "тридцать", "сорок", "пятьдесят",
                             "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
-    val rusTeens = listOf("одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать",
+    val rusTeens = listOf("десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать",
                             "шестнадцать", "семндацать", "восемнадцать", "девятнадцать")
     val rusHundreds = listOf("сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
 
@@ -378,7 +378,7 @@ fun Int.toRussian(n: Int, thousandForm: Boolean): String {
 
     when (n) {
         3 -> result.add(if (!thousandForm)  rusUnits[this - 1] else rusUnitsTF[this - 1])
-        2 -> result.add(if (this / 10 == 0) rusDecades[this - 1] else rusTeens[this - 11])
+        2 -> result.add(if (this / 10 == 0) rusDecades[this - 1] else rusTeens[this - 10])
         1 -> result.add(rusHundreds[this - 1])
     }
     return result.joinToString(separator = " ")
