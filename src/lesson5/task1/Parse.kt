@@ -99,7 +99,25 @@ fun dateStrToDigit(str: String): String {
  * Перевести её в строковый формат вида "15 июля 2016".
  * При неверном формате входной строки вернуть пустую строку
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val months = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля",
+            "августа", "сентября", "октября", "ноября", "декабря")
+    val date = digital.split(".")
+    val dd: Int
+    val mm: Int
+    val yy: Int
+
+    if (date.size != 3) return ""
+
+    try {
+        dd = date[0].toInt()
+        mm = if (date[1].toInt() in 1..12) date[1].toInt() else return ""
+        yy = date[2].toInt()
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+    return String.format("%d %s %d", dd, months[mm - 1], yy)
+}
 
 /**
  * Средняя
@@ -220,7 +238,7 @@ fun plusMinus(expression: String): Int {
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int {
-    val exp = Regex("""(\b[^\s]+)\s+\1""").find(str.toLowerCase()) ?: return -1
+    val exp = Regex("""(\b[^\s\d]+)\s+\1""").find(str.toLowerCase()) ?: return -1
     return exp.range.first
 }
 
@@ -235,7 +253,23 @@ fun firstDuplicateIndex(str: String): Int {
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть положительными
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    val products = description.split(";")
+    var maxPrice = 0.0
+    var maxName = ""
+    for (p in products) {
+        val product = p.split(" ").filter { it != "" }
+        if (product.size != 2) return ""
+        val name = product[0]
+        var price: Double
+        try { price = product[1].toDouble() } catch(e: NumberFormatException) { return "" }
+        if (price > maxPrice) {
+            maxPrice = price
+            maxName = name
+        }
+    }
+    return maxName
+}
 
 /**
  * Сложная
@@ -286,4 +320,39 @@ fun fromRoman(roman: String): Int = TODO()
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    val memory = mutableListOf<Int>()
+    for (i in 0 until cells) memory.add(0)
+    var pointer = Math.floor(cells / 2.0).toInt()
+    var lim = limit
+    val cycleStack = mutableListOf<Int>()
+    val cycles = mutableMapOf<Int, Int>()
+
+    for (i in 0 until commands.length) {
+        when {
+            commands[i] !in " ><+-[]" -> throw IllegalArgumentException()
+            commands[i] == '[' -> cycleStack.add(i)
+            commands[i] == ']' -> {
+                cycles[i] = cycleStack[cycleStack.lastIndex]
+                cycleStack.removeAt(cycleStack.lastIndex)
+            }
+        }
+    }
+
+    var j = 0
+    while (j < commands.length) {
+        if (lim == 0) break
+        val command = commands[j]
+        when (command) {
+            '>'  -> if(pointer < cells) pointer += 1 else throw IllegalStateException()
+            '<'  -> if(pointer > 0)     pointer -= 1 else throw IllegalStateException()
+            '+'  -> memory[pointer] += 1
+            '-'  -> memory[pointer] -= 1
+            '['  -> if (memory[pointer] == 0) j = cycles.filterValues { it == j }.keys.first()
+            ']'  -> if (memory[pointer] != 0) j = cycles[j]!!
+        }
+        lim--
+        j++
+    }
+    return memory.toList()
+}

@@ -338,10 +338,11 @@ fun russian(n: Int): String {
 
 fun thousandsOf(n: Int): String {
     val digits = digitsToRussian(n, true)
-    val postfix: String = when (n % 10) {
-        1       -> "тысяча"
-        in 2..4 -> "тысячи"
-        else    -> "тысяч"
+    val postfix: String = when {
+        n % 100 in 11..14 -> "тысяч"
+        n % 10 == 1       -> "тысяча"
+        n % 10 in 2..4    -> "тысячи"
+        else              -> "тысяч"
     }
 
     return if (n != 0) "$digits $postfix" else ""
