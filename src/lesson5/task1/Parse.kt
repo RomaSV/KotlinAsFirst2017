@@ -347,8 +347,8 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         if (lim == 0) break
         val command = commands[j]
         when (command) {
-            '>'  -> if(pointer < cells) pointer += 1 else throw IllegalStateException()
-            '<'  -> if(pointer > 0)     pointer -= 1 else throw IllegalStateException()
+            '>'  -> if(pointer < cells - 1) pointer += 1 else throw IllegalStateException()
+            '<'  -> if(pointer > 0) pointer -= 1 else throw IllegalStateException()
             '+'  -> memory[pointer] += 1
             '-'  -> memory[pointer] -= 1
             '['  -> if (memory[pointer] == 0) j = cycles.filterValues { it == j }.keys.first()
