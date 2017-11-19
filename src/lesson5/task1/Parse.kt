@@ -254,11 +254,11 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть положительными
  */
 fun mostExpensive(description: String): String {
-    val products = description.split(";")
+    val products = description.split("; ")
     var maxPrice = 0.0
     var maxName = ""
     for (p in products) {
-        val product = p.split(" ").filter { it != "" }
+        val product = p.split(" ")
         if (product.size != 2) return ""
         val name = product[0]
         var price: Double
