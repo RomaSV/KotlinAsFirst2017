@@ -162,8 +162,10 @@ class Line private constructor(val b: Double, val angle: Double) {
      */
     fun crossPoint(other: Line): Point {
         val x = (other.b * Math.cos(angle) - b * Math.cos(other.angle)) / Math.sin(angle - other.angle)
-        val y = if (other.angle == Math.PI / 2) - other.b
-                else (x * Math.sin(other.angle) + other.b) / Math.cos(other.angle)
+        val y = if (Math.cos(angle) > Math.cos(other.angle))
+                    (x * Math.sin(angle) + b) / Math.cos(angle)
+                else
+                    (x * Math.sin(other.angle) + other.b) / Math.cos(other.angle)
         return Point(x, y)
     }
 
@@ -184,8 +186,7 @@ class Line private constructor(val b: Double, val angle: Double) {
  * Построить прямую по отрезку
  */
 fun lineBySegment(s: Segment): Line {
-    val tan = ((s.begin.y - s.end.y) / (s.begin.x - s.end.x))
-    val angle = Math.atan(tan)
+    val angle = Math.atan2(s.end.y - s.begin.y, s.end.x - s.begin.x)
     return when {
         angle > Math.PI -> Line(s.begin, angle - Math.PI)
         angle < 0.0     -> Line(s.begin, angle + Math.PI)
