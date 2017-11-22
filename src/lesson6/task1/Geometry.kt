@@ -147,7 +147,7 @@ fun circleByDiameter(diameter: Segment): Circle {
  * или: y * cos(angle) = x * sin(angle) + b, где b = point.y * cos(angle) - point.x * sin(angle).
  * Угол наклона обязан находиться в диапазоне от 0 (включительно) до PI (исключительно).
  */
-class Line constructor(val b: Double, val angle: Double) { //MAKE IT PRIVATE
+class Line private constructor(val b: Double, val angle: Double) {
     init {
         assert(angle >= 0 && angle < Math.PI) { "Incorrect line angle: $angle" }
     }
@@ -161,8 +161,10 @@ class Line constructor(val b: Double, val angle: Double) { //MAKE IT PRIVATE
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
     fun crossPoint(other: Line): Point {
-        val x = (other.b * Math.cos(angle) - b * Math.cos(other.angle)) / Math.sin(angle - other.angle)
-        val y = (x * Math.sin(other.angle) + other.b) / Math.cos(other.angle)
+        val x = if (other.angle == Math.PI / 2) - other.b
+                else (other.b * Math.cos(angle) - b * Math.cos(other.angle)) / Math.sin(angle - other.angle)
+        val y = if (other.angle == 0.0) other.b
+                else (x * Math.sin(other.angle) + other.b) / Math.cos(other.angle)
         return Point(x, y)
     }
 
