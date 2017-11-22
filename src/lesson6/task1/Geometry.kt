@@ -147,7 +147,7 @@ fun circleByDiameter(diameter: Segment): Circle {
  * или: y * cos(angle) = x * sin(angle) + b, где b = point.y * cos(angle) - point.x * sin(angle).
  * Угол наклона обязан находиться в диапазоне от 0 (включительно) до PI (исключительно).
  */
-class Line private constructor(val b: Double, val angle: Double) {
+class Line constructor(val b: Double, val angle: Double) { //MAKE IT PRIVATE
     init {
         assert(angle >= 0 && angle < Math.PI) { "Incorrect line angle: $angle" }
     }
@@ -183,9 +183,14 @@ class Line private constructor(val b: Double, val angle: Double) {
  * Построить прямую по отрезку
  */
 fun lineBySegment(s: Segment): Line {
-    val cos = Math.abs(s.begin.x - s.end.x) / s.begin.distance(s.end)
-    val angle = Math.acos(cos)
-    return Line(s.begin, angle)
+    val tan = ((s.begin.y - s.end.y) / (s.begin.x - s.end.x))
+    val angle = Math.atan(tan)
+    return when {
+        angle > Math.PI -> Line(s.begin, angle - Math.PI)
+        angle < 0.0     -> Line(s.begin, angle + Math.PI)
+        else            -> Line(s.begin, angle)
+    }
+
 }
 
 /**
@@ -241,7 +246,12 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
  * (построить окружность по трём точкам, или
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = TODO()
+fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
+    val center = bisectorByPoints(a, b).crossPoint(bisectorByPoints(a, c))
+    val radius = center.distance(a)
+    return Circle(center, radius)
+
+}
 
 /**
  * Очень сложная

@@ -340,6 +340,11 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         }
     }
 
+    val invCycles = mutableMapOf<Int, Int>()
+    for (i in cycles.keys) {
+        invCycles[cycles[i]!!] = i
+    }
+
     if (cycleStack.isNotEmpty()) throw IllegalArgumentException()
 
     var j = 0
@@ -351,7 +356,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             '<'  -> if(pointer > 0) pointer -= 1 else throw IllegalStateException()
             '+'  -> memory[pointer] += 1
             '-'  -> memory[pointer] -= 1
-            '['  -> if (memory[pointer] == 0) j = cycles.filterValues { it == j }.keys.first()
+            '['  -> if (memory[pointer] == 0) j = invCycles[j]!!
             ']'  -> if (memory[pointer] != 0) j = cycles[j]!!
         }
         lim--
