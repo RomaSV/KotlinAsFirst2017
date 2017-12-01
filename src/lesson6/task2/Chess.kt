@@ -62,6 +62,7 @@ fun square(notation: String): Square {
  * Ладья может пройти через клетку (3, 3) или через клетку (6, 1) к клетке (6, 3).
  */
 fun rookMoveNumber(start: Square, end: Square): Int = when {
+    !(start.inside() && end.inside()) -> throw IllegalArgumentException()
     start == end -> 0
     start.column == end.column || start.row == end.row -> 1
     else -> 2
@@ -114,7 +115,7 @@ fun bishopMoveNumber(start: Square, end: Square): Int {
     val dx = Math.abs(start.column - end.column)
     val dy = Math.abs(start.row - end.row)
     return when {
-        !(start.inside() || end.inside()) -> throw IllegalArgumentException()
+        !(start.inside() && end.inside()) -> throw IllegalArgumentException()
         dx % 2 != dy % 2 -> -1
         start == end -> 0
         dx == dy -> 1

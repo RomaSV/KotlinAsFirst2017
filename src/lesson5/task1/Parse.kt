@@ -207,22 +207,15 @@ fun bestHighJump(jumps: String): Int {
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
+    if (!Regex("""\d+( [+|\-] \d+)*""").matches(expression)) throw IllegalArgumentException()
     val rawData = expression.split(" ")
-    var result = 0
-    try {
-        result += rawData[0].toInt()
-    } catch (e: NumberFormatException) {
-        throw IllegalArgumentException()
-    }
+    var result = rawData[0].toInt()
+
     for (i in 2 until rawData.size step 2) {
-        try {
-            if (rawData[i - 1] == "+") {
-                result += rawData[i].toInt()
-            } else if (rawData[i - 1] == "-") {
-                result -= rawData[i].toInt()
-            }
-        } catch (e: NumberFormatException) {
-            throw IllegalArgumentException()
+        if (rawData[i - 1] == "+") {
+            result += rawData[i].toInt()
+        } else if (rawData[i - 1] == "-") {
+            result -= rawData[i].toInt()
         }
     }
     return result
@@ -238,7 +231,7 @@ fun plusMinus(expression: String): Int {
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int {
-    val exp = Regex("""(\b[^\s]+)\s+\1\b""").find(str.toLowerCase()) ?: return -1
+    val exp = Regex("""((?<=^|\s)[^\s]+)\s+\1(?=$|\s)""").find(str.toLowerCase()) ?: return -1
     return exp.range.first
 }
 
