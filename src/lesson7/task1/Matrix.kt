@@ -75,7 +75,6 @@ class MatrixImpl<E>(override val height: Int, override val width: Int) : Matrix<
             width == other.width &&
             values == other.values
 
-
     override fun toString(): String {
         val result = StringBuilder()
         for (column in 0 until height) {
@@ -86,6 +85,13 @@ class MatrixImpl<E>(override val height: Int, override val width: Int) : Matrix<
             result.append("\n")
         }
         return result.toString()
+    }
+
+    override fun hashCode(): Int {
+        var result = height
+        result = 31 * result + width
+        result = 31 * result + values.hashCode()
+        return result
     }
 }
 
