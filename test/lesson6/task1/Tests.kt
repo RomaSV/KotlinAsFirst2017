@@ -47,7 +47,7 @@ class Tests {
 
     private fun approxEquals(expected: Line, actual: Line, delta: Double): Boolean =
             Math.abs(expected.angle - actual.angle) <= delta &&
-            Math.abs(expected.b - actual.b) <= delta
+                    Math.abs(expected.b - actual.b) <= delta
 
     private fun assertApproxEquals(expected: Line, actual: Line, delta: Double = Math.ulp(10.0)) {
         assertTrue(approxEquals(expected, actual, delta))
@@ -213,4 +213,5 @@ class Tests {
             assertTrue(result.contains(p))
         }
     }
+
 }
