@@ -85,7 +85,7 @@ data class Circle(val center: Point, val radius: Double) {
      *
      * Вернуть true, если и только если окружность содержит данную точку НА себе или ВНУТРИ себя
      */
-    fun contains(p: Point): Boolean = center.distance(p) < radius
+    fun contains(p: Point): Boolean = center.distance(p) <= radius + 1e-10
 }
 
 /**
@@ -266,4 +266,33 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
  */
-fun minContainingCircle(vararg points: Point): Circle = TODO()
+fun minContainingCircle(vararg points: Point): Circle = when (points.size) {
+    0 -> throw IllegalArgumentException()
+    1 -> Circle(points[0], 0.0)
+    2 -> circleByDiameter(Segment(points[0], points[1]))
+    else -> minCircle(points.toList())
+}
+
+// Использован алгоритм Smallest Enclosing Discs из Computational Geometry (за исключением "перемешивания" списков точек)
+fun minCircle(points: List<Point>): Circle {
+    var result = circleByDiameter(Segment(points[0], points[1]))
+    for (point in points.slice(2..points.lastIndex)) {
+        if (!result.contains(point)) result = minCircle(points.slice(0..points.indexOf(point)), point)
+    }
+    return result
+}
+fun minCircle(points: List<Point>, q: Point): Circle {
+    var result = circleByDiameter(Segment(points[0], q))
+    for (point in points.slice(1..points.lastIndex)) {
+        if (!result.contains(point)) result = minCircle(points.slice(0..points.indexOf(point)), point, q)
+    }
+    return result
+}
+
+fun minCircle(points: List<Point>, q1: Point, q2: Point): Circle {
+    var result = circleByDiameter(Segment(q1, q2))
+    for (point in points) {
+        if (!result.contains(point)) result = circleByThreePoints(q1, q2, point)
+    }
+    return result
+}
