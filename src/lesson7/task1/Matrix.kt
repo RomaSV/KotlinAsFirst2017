@@ -42,7 +42,7 @@ fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> {
     val result = MatrixImpl<E>(height, width)
     for (w in 0 until width) {
         for (h in 0 until height) {
-            result[Cell(w, h)] = e
+            result[Cell(h, w)] = e
         }
     }
     return result
