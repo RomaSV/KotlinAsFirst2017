@@ -39,6 +39,7 @@ interface Matrix<E> {
  * Бросить исключение IllegalArgumentException, если height или width <= 0.
  */
 fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> {
+    if (width <= 0 || height <= 0) throw IllegalArgumentException()
     val result = MatrixImpl<E>(height, width)
     for (w in 0 until width) {
         for (h in 0 until height) {
@@ -57,9 +58,11 @@ class MatrixImpl<E>(override val height: Int, override val width: Int) : Matrix<
 
     private val values = mutableMapOf<Cell, E>()
 
-    override fun get(row: Int, column: Int): E  = values[Cell(row, column)]!!
+    override fun get(row: Int, column: Int): E  =
+            if (column in 0 until width && row in 0 until height) values[Cell(row, column)]!!
+            else throw IllegalArgumentException()
 
-    override fun get(cell: Cell): E  = values[cell]!!
+    override fun get(cell: Cell): E  = get(cell.row, cell.column)
 
     override fun set(row: Int, column: Int, value: E) {
         values[Cell(row, column)] = value
@@ -69,20 +72,11 @@ class MatrixImpl<E>(override val height: Int, override val width: Int) : Matrix<
         values[cell] = value
     }
 
-    private fun valuesEquals(m1: MatrixImpl<*>, m2: MatrixImpl<*>): Boolean {
-        for (row in 0 until m1.height) {
-            for (column in 0 until m1.width) {
-                if (m1[row, column] != m2[row, column]) return false
-            }
-        }
-        return true
-    }
-
     override fun equals(other: Any?) =
             other is MatrixImpl<*> &&
             height == other.height &&
             width == other.width &&
-            valuesEquals(this, other)
+            values == other.values
 
     override fun hashCode(): Int {
         var result = height
@@ -93,8 +87,8 @@ class MatrixImpl<E>(override val height: Int, override val width: Int) : Matrix<
 
     override fun toString(): String {
         val result = StringBuilder()
-        for (column in 0 until height) {
-            for (row in 0 until width) {
+        for (row in 0 until height) {
+            for (column in 0 until width) {
                 result.append(values[Cell(row, column)])
                 if (row != width - 1) result.append(", ")
             }
