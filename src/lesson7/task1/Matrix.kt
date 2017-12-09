@@ -90,7 +90,7 @@ class MatrixImpl<E>(override val height: Int, override val width: Int) : Matrix<
         for (row in 0 until height) {
             for (column in 0 until width) {
                 result.append(values[Cell(row, column)])
-                if (row != width - 1) result.append(", ")
+                if (column != width - 1) result.append(", ")
             }
             result.append("\n")
         }
