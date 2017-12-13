@@ -102,7 +102,11 @@ class Tests {
                         listOf(10, 13, 16, 18),
                         listOf(14, 17, 19, 20)
                 )), generateSnake(5, 4))
-
+        assertEquals(createMatrix(2, 8,
+                listOf(
+                        listOf(1, 2, 4, 6, 8, 10, 12, 14),
+                        listOf(3, 5, 7, 9, 11, 13, 15, 16)
+                )), generateSnake(2, 8))
     }
 
     @Test

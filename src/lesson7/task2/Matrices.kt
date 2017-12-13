@@ -111,7 +111,7 @@ fun generateSnake(height: Int, width: Int): Matrix<Int> {
             curColumn--
             curRow++
         }
-        else if (curColumn == 0 && curRow < width - 1) {
+        else if (curRow < width - 1 && (curColumn == 0 || curRow < height && curColumn < width - 2)) {
             curColumn = lastColumn + 1
             curRow = 0
             lastColumn = curColumn
