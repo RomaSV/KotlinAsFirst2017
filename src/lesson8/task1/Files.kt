@@ -110,7 +110,23 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val outputStream = File(outputName).bufferedWriter()
+    val filterExp = Regex("""(^\s*)|(\s*$)""")
+    var maxLength = 0
+    for (line in File(inputName).readLines())
+        if (filterExp.replace(line, "").length > maxLength)
+            maxLength = filterExp.replace(line, "").length
+
+    for (line in File(inputName).readLines()) {
+        val formatLine = filterExp.replace(line, "")
+        val result = StringBuilder()
+        for (i in 1..Math.floorDiv(maxLength - formatLine.length, 2)) result.append(" ")
+        result.append(formatLine)
+        outputStream.write(result.toString())
+        outputStream.newLine()
+    }
+
+    outputStream.close()
 }
 
 /**
@@ -141,7 +157,33 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    val outputStream = File(outputName).bufferedWriter()
+    val lines = mutableListOf<Pair<List<String>, Int>>()
+    var maxLength = 0
+    for (line in File(inputName).readLines())
+    {
+        val words = line.split(Regex(" +")).filter { it != "" }
+        val length = words.joinToString("").length
+        lines.add(Pair(words, length))
+        if (length + words.size - 1 > maxLength) maxLength = length + words.size - 1
+    }
+
+    for ((words, length) in lines) {
+        val result = StringBuilder()
+        var spaces = if (words.size < 2) 0 else maxLength - length
+        for ((index, word) in words.withIndex()) {
+            result.append(word)
+            if (index != words.lastIndex) {
+                val space = Math.ceil(spaces / ( words.size - 1.0 - index)).toInt()
+                for (i in 1..space) result.append(" ")
+                spaces -= space
+            }
+        }
+        outputStream.write(result.toString())
+        outputStream.newLine()
+    }
+
+    outputStream.close()
 }
 
 /**
